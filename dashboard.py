@@ -4,11 +4,11 @@ import plotly.express as px
 import os
 
 # --- 1. KONFIGURATION ---
-st.set_page_config(page_title="Wetter-Analyse Master", layout="wide")
+st.set_page_config(page_title="Wetter-Analyse Dashboard ", layout="wide")
 
 @st.cache_data
 def load_data():
-    pfad = r"C:\Users\backo\Downloads\data_04.csv"
+    pfad = "data_04.csv"
     if not os.path.exists(pfad):
         st.error("Datei nicht gefunden!")
         st.stop()
@@ -95,4 +95,5 @@ heatmap_data = df_filtered.pivot_table(
 ).reindex(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
 
 fig_heat = px.imshow(heatmap_data, text_auto=".1f", color_continuous_scale='RdBu_r')
+
 st.plotly_chart(fig_heat, use_container_width=True)
