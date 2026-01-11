@@ -4,7 +4,7 @@ import plotly.express as px
 import os
 
 # --- 1. KONFIGURATION ---
-st.set_page_config(page_title="Wetter & Wind Analyse Pro", layout="wide")
+st.set_page_config(page_title="Wetter Analyse Dashboard", layout="wide")
 
 @st.cache_data
 def load_data():
@@ -41,7 +41,7 @@ ausgewählte_jahre = st.sidebar.multiselect("Jahre auswählen:", options=verfüg
 df_filtered = df[df['Jahr'].isin(ausgewählte_jahre)]
 
 # --- 3. DASHBOARD HAUPTBEREICH ---
-st.title("📊 Wetter & Wind Master-Statistik")
+st.title("Wetter Analyse Dashboard")
 
 if df_filtered.empty:
     st.warning("Bitte wählen Sie mindestens ein Jahr aus.")
@@ -56,7 +56,7 @@ else:
     avg_wind_speed = df_filtered['wind_speed'].mean()
 
     # --- KPI HIGHLIGHTS ---
-    st.subheader("Temperatur & Wind Highlights")
+    st.subheader("Temperatur Highlights")
     tc1, tc2, tc3 = st.columns(3)
     tc1.metric("Ø Temperatur", f"{df_filtered['temperature'].mean():.2f} °C")
     tc2.metric("Maximum", f"{t_max_row['temperature']:.1f} °C", f"Jahr: {t_max_row['Jahr']}")
@@ -65,13 +65,13 @@ else:
     st.subheader("Wind Highlights")
     wc1, wc2, wc3 = st.columns(3)
     wc1.metric("Ø Windgeschwindigkeit", f"{avg_wind_speed:.2f} m/s")
-    wc2.metric("Stärkste Böe", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
+    wc2.metric("Stärkste", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
     wc3.metric("Windieste Stunde", f"{windiest_hour}:00 Uhr", "Tages-Maximum")
 
     st.divider()
     
     # --- 4. TEMPERATUR: TREND & DISTRIBUTION ---
-    st.subheader("🌡️ Temperatur: Entwicklung & Ausreißer")
+    st.subheader("Temperatur")
     col_t1, col_t2 = st.columns([2, 1])
     
     with col_t1:
@@ -90,7 +90,7 @@ else:
     st.divider()
 
     # --- 5. WIND: TREND & DISTRIBUTION ---
-    st.subheader("🌬️ Wind: Entwicklung & Ausreißer")
+    st.subheader("Wind")
     col_w1, col_w2 = st.columns([2, 1])
     
     with col_w1:
@@ -109,9 +109,9 @@ else:
     st.divider()
 
     # --- 6. TAGESVERLAUF & HEATMAPS ---
-    st.subheader("🕒 Tagesverlauf & 📅 Heatmaps")
+    st.subheader("Tagesverlauf & Heatmaps")
     
-    tab1, tab2 = st.tabs(["24h Verlauf", "Monatliche Matrix"])
+    tab1, tab2 = st.tabs(["24h Verlauf", "Monatliche Stataistik"])
     
     with tab1:
         hourly_stats = df_filtered.groupby('Stunde').agg({'temperature': 'mean', 'wind_speed': 'mean'}).reset_index()
@@ -126,6 +126,7 @@ else:
         w_heat = df_filtered.pivot_table(index='Monat', columns='Jahr', values='wind_speed', aggfunc='mean').reindex(m_order)
         h1.plotly_chart(px.imshow(t_heat, text_auto=".1f", color_continuous_scale='RdBu_r', title="Heatmap Temp"), use_container_width=True)
         h2.plotly_chart(px.imshow(w_heat, text_auto=".1f", color_continuous_scale='Blues', title="Heatmap Wind"), use_container_width=True)
+
 
 
 
