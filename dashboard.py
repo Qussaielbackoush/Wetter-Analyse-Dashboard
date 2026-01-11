@@ -53,7 +53,7 @@ else:
     avg_wind = df_filtered['wind_speed'].mean()
 
     st.subheader("Globale Highlights")
-    k1, k2, k3, k4 = st.columns(4)
+    k1, k2, k3, k4, k5 = st.columns(5)
     k1.metric("Ø Temperatur", f"{df_filtered['temperature'].mean():.2f} °C")
     k2.metric("Max Temp", f"{t_max_row['temperature']:.1f} °C", f"Jahr: {t_max_row['Jahr']}")
     k3.metric("Min Temp", f"{t_min_row['temperature']:.1f} °C", f"Jahr: {t_min_row['Jahr']}", delta_color="inverse")
@@ -119,4 +119,5 @@ else:
                           .background_gradient(subset=['Avg_Wind'], cmap='Blues'),
         use_container_width=True
     )
+
 
