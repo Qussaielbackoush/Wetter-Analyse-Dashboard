@@ -52,7 +52,6 @@ else:
     w_max_row = df_filtered.loc[df_filtered['wind_speed'].idxmax()]
     avg_wind = df_filtered['wind_speed'].mean()
 
-    st.subheader("Globale Highlights")
     # --- TEMPERATUR METRIKEN ---
     st.subheader("Temperatur Highlights")
     tc1, tc2, tc3 = st.columns(3)
@@ -126,6 +125,7 @@ else:
                           .background_gradient(subset=['Avg_Wind'], cmap='Blues'),
         use_container_width=True
     )
+
 
 
 
