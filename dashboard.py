@@ -97,3 +97,37 @@ heatmap_data = df_filtered.pivot_table(
 fig_heat = px.imshow(heatmap_data, text_auto=".1f", color_continuous_scale='RdBu_r')
 
 st.plotly_chart(fig_heat, use_container_width=True)
+
+st.divider()
+st.header(" Fortgeschrittene Analysen")
+
+col_a, col_b = st.columns(2)
+
+with col_a:
+    st.subheader("Typischer Tagesverlauf")
+    # Durchschnittliche Temperatur pro Stunde berechnen
+    hourly_profile = df_filtered.groupby('Stunde')['temperature'].mean().reset_index()
+    fig_hourly = px.line(hourly_profile, x='Stunde', y='temperature', 
+                         title="Ø Temperatur nach Uhrzeit",
+                         labels={'temperature': 'Temp (°C)', 'Stunde': 'Uhrzeit (0-23)'})
+    st.plotly_chart(fig_hourly, use_container_width=True)
+
+with col_b:
+    st.subheader("Temperatur-Stabilität (Boxplot)")
+    # Zeigt die Streuung der Daten pro Jahreszeit
+    fig_box = px.box(df_filtered, x='Jahreszeit', y='temperature', 
+                     color='Jahreszeit',
+                     title="Temperatur-Streuung pro Saison",
+                     color_discrete_map={'Winter': '#00B4D8', 'Sommer': '#FFB703', 'Frühling': '#2D6A4F', 'Herbst': '#BA181B'})
+    st.plotly_chart(fig_box, use_container_width=True)
+
+# 7. Volatilitäts-Check
+st.subheader("Größte Temperatur-Schwankungen")
+# Delta pro Tag berechnen
+daily_delta = df_filtered.groupby('Datum')['temperature'].agg(['max', 'min']).reset_index()
+daily_delta['Delta'] = daily_delta['max'] - daily_delta['min']
+top_deltas = daily_delta.sort_values(by='Delta', ascending=False).head(5)
+
+st.write("Tage mit den extremsten Temperaturunterschieden:")
+st.table(top_deltas)
+
