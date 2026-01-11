@@ -95,3 +95,19 @@ else:
     ).reset_index()
     
     st.dataframe(stats_pivot.style.background_gradient(subset=['Avg_Temp'], cmap='YlOrRd'), use_container_width=True)
+    # --- 7. HEATMAP ---
+    st.divider()
+    st.subheader("Temperatur-Heatmap")
+    # Korrigiert: aggfunc statt agg_func
+    heatmap_data = df_filtered.pivot_table(
+         index='Monat', 
+         columns='Jahr', 
+         values='temperature', 
+         aggfunc='mean' 
+    ).reindex(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'])
+
+    fig_heat = px.imshow(heatmap_data, text_auto=".1f", color_continuous_scale='RdBu_r')
+    st.plotly_chart(fig_heat, use_container_width=True)
+
+
+
