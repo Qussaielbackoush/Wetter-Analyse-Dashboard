@@ -4,7 +4,7 @@ import plotly.express as px
 import os
 
 # --- 1. KONFIGURATION ---
-st.set_page_config(page_title="Wetter & Wind Analyse Pro", layout="wide")
+st.set_page_config(page_title="Wetter Analyse Dashboard", layout="wide")
 
 @st.cache_data
 def load_data():
@@ -46,7 +46,7 @@ def filter_outliers(df, column):
     upper_bound = Q3 + 1.5 * IQR
     return df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
 
-clean_outliers = st.sidebar.checkbox("Ausreißer entfernen (IQR-Methode)", value=False)
+clean_outliers = st.sidebar.checkbox("Ausreißer entfernen", value=False)
 
 if clean_outliers:
     df_clean = filter_outliers(df_raw, 'temperature')
@@ -141,4 +141,5 @@ else:
                           .background_gradient(subset=['Avg_Wind'], cmap='Blues'),
         use_container_width=True
     )
+
 
