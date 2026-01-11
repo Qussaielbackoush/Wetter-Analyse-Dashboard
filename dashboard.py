@@ -67,7 +67,7 @@ else:
     wc1, wc2, wc3 = st.columns(3)
     wc1.metric("Ø Windgeschwindigkeit", f"{df_filtered['wind_speed'].mean():.2f} m/s")
     wc2.metric("Stärkste", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
-    wc3.empty() # Platzhalter für Symmetrie
+    wc3.empty("Windieste Std", f"{windiest_hour}:00") # Platzhalter für Symmetrie
 
     st.divider()
 
@@ -127,4 +127,5 @@ else:
         w_heat = df_filtered.pivot_table(index='Monat', columns='Jahr', values='wind_speed', aggfunc='mean').reindex(m_order)
         h1.plotly_chart(px.imshow(t_heat, text_auto=".1f", color_continuous_scale='RdBu_r', title="Heatmap Temp"), use_container_width=True)
         h2.plotly_chart(px.imshow(w_heat, text_auto=".1f", color_continuous_scale='Blues', title="Heatmap Wind"), use_container_width=True)
+
 
