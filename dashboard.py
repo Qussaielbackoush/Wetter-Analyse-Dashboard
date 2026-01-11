@@ -41,39 +41,35 @@ ausgewählte_jahre = st.sidebar.multiselect("Jahre auswählen:", options=verfüg
 df_filtered = df[df['Jahr'].isin(ausgewählte_jahre)]
 
 # --- 3. DASHBOARD HAUPTBEREICH ---
-    st.title("📊 Wetter & Wind Master-Statistik")
+st.title("📊 Wetter & Wind Master-Statistik")
 
-    if df_filtered.empty:
-        st.warning("Bitte wählen Sie mindestens ein Jahr aus.")
-    else:
-        # --- BERECHNUNGEN ---
-        t_max_row = df_filtered.loc[df_filtered['temperature'].idxmax()]
-        t_min_row = df_filtered.loc[df_filtered['temperature'].idxmin()]
-        w_max_row = df_filtered.loc[df_filtered['wind_speed'].idxmax()]
-        
-        # Windieste Stunde (Schnitt über alle gewählten Tage)
-        hourly_wind = df_filtered.groupby('Stunde')['wind_speed'].mean()
-        windiest_hour = hourly_wind.idxmax()
-        avg_wind_speed = df_filtered['wind_speed'].mean()
+if df_filtered.empty:
+    st.warning("Bitte wählen Sie mindestens ein Jahr aus.")
+else:
+    # --- BERECHNUNGEN ---
+    t_max_row = df_filtered.loc[df_filtered['temperature'].idxmax()]
+    t_min_row = df_filtered.loc[df_filtered['temperature'].idxmin()]
+    w_max_row = df_filtered.loc[df_filtered['wind_speed'].idxmax()]
+    
+    hourly_wind = df_filtered.groupby('Stunde')['wind_speed'].mean()
+    windiest_hour = hourly_wind.idxmax()
+    avg_wind_speed = df_filtered['wind_speed'].mean()
 
-        # --- KPI HIGHLIGHTS ---
-        
-        # REIHE 1: TEMPERATUR (UP)
-        st.subheader("🌡️ Temperatur Highlights")
-        tc1, tc2, tc3 = st.columns(3)
-        tc1.metric("Ø Temperatur", f"{df_filtered['temperature'].mean():.2f} °C")
-        tc2.metric("Maximum", f"{t_max_row['temperature']:.1f} °C", f"Jahr: {t_max_row['Jahr']}")
-        tc3.metric("Minimum", f"{t_min_row['temperature']:.1f} °C", f"Jahr: {t_min_row['Jahr']}", delta_color="inverse")
+    # --- KPI HIGHLIGHTS ---
+    st.subheader("Temperatur & Wind Highlights")
+    tc1, tc2, tc3 = st.columns(3)
+    tc1.metric("Ø Temperatur", f"{df_filtered['temperature'].mean():.2f} °C")
+    tc2.metric("Maximum", f"{t_max_row['temperature']:.1f} °C", f"Jahr: {t_max_row['Jahr']}")
+    tc3.metric("Minimum", f"{t_min_row['temperature']:.1f} °C", f"Jahr: {t_min_row['Jahr']}", delta_color="inverse")
 
-        # REIHE 2: WIND (DOWN)
-        st.subheader("🌬️ Wind Highlights")
-        wc1, wc2, wc3 = st.columns(3)
-        wc1.metric("Ø Windgeschwindigkeit", f"{avg_wind_speed:.2f} m/s")
-        wc2.metric("Stärkste Böe", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
-        wc3.metric("Windieste Stunde", f"{windiest_hour}:00 Uhr", "Tages-Maximum")
+    st.subheader("Wind Highlights")
+    wc1, wc2, wc3 = st.columns(3)
+    wc1.metric("Ø Windgeschwindigkeit", f"{avg_wind_speed:.2f} m/s")
+    wc2.metric("Stärkste Böe", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
+    wc3.metric("Windieste Stunde", f"{windiest_hour}:00 Uhr", "Tages-Maximum")
 
-        st.divider()
-        
+    st.divider()
+    
     # --- 4. TEMPERATUR: TREND & DISTRIBUTION ---
     st.subheader("🌡️ Temperatur: Entwicklung & Ausreißer")
     col_t1, col_t2 = st.columns([2, 1])
@@ -130,6 +126,7 @@ df_filtered = df[df['Jahr'].isin(ausgewählte_jahre)]
         w_heat = df_filtered.pivot_table(index='Monat', columns='Jahr', values='wind_speed', aggfunc='mean').reindex(m_order)
         h1.plotly_chart(px.imshow(t_heat, text_auto=".1f", color_continuous_scale='RdBu_r', title="Heatmap Temp"), use_container_width=True)
         h2.plotly_chart(px.imshow(w_heat, text_auto=".1f", color_continuous_scale='Blues', title="Heatmap Wind"), use_container_width=True)
+
 
 
 
