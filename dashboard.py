@@ -56,14 +56,18 @@ else:
     windiest_hour = hourly_wind.idxmax()
 
     # --- KPI HIGHLIGHTS ---
-    st.subheader("📌 Globale Highlights")
-    k1, k2, k3, k4, k5, k6 = st.columns(6)
-    k1.metric("Ø Temp", f"{df_filtered['temperature'].mean():.1f} °C")
-    k2.metric("Max Temp", f"{t_max_row['temperature']:.1f} °C")
-    k3.metric("Min Temp", f"{t_min_row['temperature']:.1f} °C")
-    k4.metric("Ø Wind", f"{df_filtered['wind_speed'].mean():.1f} m/s")
-    k5.metric("Max Wind", f"{w_max_row['wind_speed']:.1f} m/s")
-    k6.metric("Windieste Std", f"{windiest_hour}:00")
+    # --- TEMPERATUR METRIKEN ---
+    st.subheader("Temperatur & Wind Highlights")
+    tc1, tc2, tc3 = st.columns(3)
+    tc1.metric("Ø Temperatur", f"{df_filtered['temperature'].mean():.2f} °C")
+    tc2.metric("Maximum", f"{t_max_row['temperature']:.1f} °C", f"Jahr: {t_max_row['Jahr']}")
+    tc3.metric("Minimum", f"{t_min_row['temperature']:.1f} °C", f"Jahr: {t_min_row['Jahr']}", delta_color="inverse")
+
+    # --- WIND METRIKEN ---
+    wc1, wc2, wc3 = st.columns(3)
+    wc1.metric("Ø Windgeschwindigkeit", f"{df_filtered['wind_speed'].mean():.2f} m/s")
+    wc2.metric("Stärkste", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
+    wc3.empty() # Platzhalter für Symmetrie
 
     st.divider()
 
@@ -123,3 +127,4 @@ else:
         w_heat = df_filtered.pivot_table(index='Monat', columns='Jahr', values='wind_speed', aggfunc='mean').reindex(m_order)
         h1.plotly_chart(px.imshow(t_heat, text_auto=".1f", color_continuous_scale='RdBu_r', title="Heatmap Temp"), use_container_width=True)
         h2.plotly_chart(px.imshow(w_heat, text_auto=".1f", color_continuous_scale='Blues', title="Heatmap Wind"), use_container_width=True)
+
