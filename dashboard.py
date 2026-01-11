@@ -53,12 +53,19 @@ else:
     avg_wind = df_filtered['wind_speed'].mean()
 
     st.subheader("Globale Highlights")
-    k1, k2, k3, k4, k5 = st.columns(5)
-    k1.metric("Ø Temperatur", f"{df_filtered['temperature'].mean():.2f} °C")
-    k2.metric("Max Temp", f"{t_max_row['temperature']:.1f} °C", f"Jahr: {t_max_row['Jahr']}")
-    k3.metric("Min Temp", f"{t_min_row['temperature']:.1f} °C", f"Jahr: {t_min_row['Jahr']}", delta_color="inverse")
-    k4.metric("Ø Windstärke", f"{avg_wind:.2f} m/s")
-    k5.metric("Stärkster Wind", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
+    # --- TEMPERATUR METRIKEN ---
+    st.subheader("Temperatur Highlights")
+    tc1, tc2, tc3 = st.columns(3)
+    tc1.metric("Ø Temperatur", f"{df_filtered['temperature'].mean():.2f} °C")
+    tc2.metric("Absolutes Maximum", f"{t_max_row['temperature']:.1f} °C", f"Jahr: {t_max_row['Jahr']}")
+    tc3.metric("Absolutes Minimum", f"{t_min_row['temperature']:.1f} °C", f"Jahr: {t_min_row['Jahr']}", delta_color="inverse")
+
+    # --- WIND METRIKEN ---
+    st.subheader("Wind Highlights")
+    wc1, wc2, wc3 = st.columns(3)
+    wc1.metric("Ø Windgeschwindigkeit", f"{df_filtered['wind_speed'].mean():.2f} m/s")
+    wc2.metric("Stärkste Böe", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
+    wc3.empty() # Platzhalter für Symmetrie
 
     st.divider()
 
@@ -119,5 +126,6 @@ else:
                           .background_gradient(subset=['Avg_Wind'], cmap='Blues'),
         use_container_width=True
     )
+
 
 
