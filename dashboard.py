@@ -4,7 +4,7 @@ import plotly.express as px
 import os
 
 # --- 1. KONFIGURATION ---
-st.set_page_config(page_title="Wetter & Wind Analyse Pro", layout="wide")
+st.set_page_config(page_title="Wetter Analyse Dashboard", layout="wide")
 
 @st.cache_data
 def load_data():
@@ -41,7 +41,7 @@ ausgewählte_jahre = st.sidebar.multiselect("Jahre auswählen:", options=verfüg
 df_filtered = df[df['Jahr'].isin(ausgewählte_jahre)]
 
 # --- 3. HAUPTBEREICH ---
-st.title("📊 Wetter & Wind Master-Statistik")
+st.title("Temperature & Wind Statistik")
 
 if df_filtered.empty:
     st.warning("Bitte wählen Sie mindestens ein Jahr aus.")
@@ -52,12 +52,13 @@ else:
     w_max_row = df_filtered.loc[df_filtered['wind_speed'].idxmax()]
     avg_wind = df_filtered['wind_speed'].mean()
 
-    st.subheader("📌 Globale Highlights")
+    st.subheader("Globale Highlights")
     k1, k2, k3, k4 = st.columns(4)
     k1.metric("Ø Temperatur", f"{df_filtered['temperature'].mean():.2f} °C")
     k2.metric("Max Temp", f"{t_max_row['temperature']:.1f} °C", f"Jahr: {t_max_row['Jahr']}")
-    k3.metric("Ø Windstärke", f"{avg_wind:.2f} m/s")
-    k4.metric("Stärkster Wind", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
+    k3.metric("Min Temp", f"{t_min_row['temperature']:.1f} °C", f"Jahr: {t_min_row['Jahr']}", delta_color="inverse")
+    k4.metric("Ø Windstärke", f"{avg_wind:.2f} m/s")
+    k5.metric("Stärkster Wind", f"{w_max_row['wind_speed']:.1f} m/s", f"Jahr: {w_max_row['Jahr']}")
 
     st.divider()
 
@@ -65,14 +66,14 @@ else:
     col_l, col_r = st.columns(2)
 
     with col_l:
-        st.subheader("📈 Temperatur-Trend (Saisonal)")
+        st.subheader("Temperatur-Trend (Saisonal)")
         df_t_trend = df_filtered.groupby(['Jahr', 'Jahreszeit'])['temperature'].mean().reset_index()
         fig_t = px.line(df_t_trend, x='Jahr', y='temperature', color='Jahreszeit', markers=True,
                         color_discrete_map={'Winter': '#00B4D8', 'Sommer': '#FFB703', 'Frühling': '#2D6A4F', 'Herbst': '#BA181B'})
         st.plotly_chart(fig_t, use_container_width=True)
 
     with col_r:
-        st.subheader("🌬️ Wind-Trend (Saisonal)")
+        st.subheader("Wind-Trend (Saisonal)")
         df_w_trend = df_filtered.groupby(['Jahr', 'Jahreszeit'])['wind_speed'].mean().reset_index()
         fig_w = px.line(df_w_trend, x='Jahr', y='wind_speed', color='Jahreszeit', markers=True,
                         color_discrete_map={'Winter': '#00B4D8', 'Sommer': '#FFB703', 'Frühling': '#2D6A4F', 'Herbst': '#BA181B'})
@@ -81,7 +82,7 @@ else:
     st.divider()
 
     # --- REIHE 3: MONATLICHE HEATMAPS (Der "Per Monat" Vergleich) ---
-    st.subheader("📅 Monatliche Durchschnittswerte im Vergleich")
+    st.subheader("Monatliche Durchschnittswerte im Vergleich")
     
     # Vorbereitung der Monate für die richtige Sortierung
     monats_reihenfolge = ['January', 'February', 'March', 'April', 'May', 'June', 
@@ -103,11 +104,12 @@ else:
 
     # --- REIHE 4: DETAIL MATRIX ---
     st.divider()
-    st.subheader("📊 Detaillierte Statistik-Matrix")
+    st.subheader("Detaillierte Statistik-Matrix")
     
     stats_matrix = df_filtered.groupby(['Jahr', 'Jahreszeit']).agg(
         Avg_Temp=('temperature', 'mean'),
         Max_Temp=('temperature', 'max'),
+        Min_Temp=('temperature', 'min'),
         Avg_Wind=('wind_speed', 'mean'),
         Max_Wind=('wind_speed', 'max')
     ).reset_index()
@@ -117,3 +119,4 @@ else:
                           .background_gradient(subset=['Avg_Wind'], cmap='Blues'),
         use_container_width=True
     )
+
