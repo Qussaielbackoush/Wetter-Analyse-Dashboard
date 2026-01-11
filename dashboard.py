@@ -73,8 +73,7 @@ df_filtered = df[df['Jahr'].isin(ausgewählte_jahre)]
         wc3.metric("Windieste Stunde", f"{windiest_hour}:00 Uhr", "Tages-Maximum")
 
         st.divider()
-        # Hier folgen dann deine Charts (Trend & Distribution)...
-
+        
     # --- 4. TEMPERATUR: TREND & DISTRIBUTION ---
     st.subheader("🌡️ Temperatur: Entwicklung & Ausreißer")
     col_t1, col_t2 = st.columns([2, 1])
@@ -131,6 +130,7 @@ df_filtered = df[df['Jahr'].isin(ausgewählte_jahre)]
         w_heat = df_filtered.pivot_table(index='Monat', columns='Jahr', values='wind_speed', aggfunc='mean').reindex(m_order)
         h1.plotly_chart(px.imshow(t_heat, text_auto=".1f", color_continuous_scale='RdBu_r', title="Heatmap Temp"), use_container_width=True)
         h2.plotly_chart(px.imshow(w_heat, text_auto=".1f", color_continuous_scale='Blues', title="Heatmap Wind"), use_container_width=True)
+
 
 
 
