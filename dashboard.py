@@ -61,7 +61,7 @@ ausgewählte_jahre = st.sidebar.multiselect("Jahre auswählen:", options=verfüg
 df_filtered = df_clean[df_clean['Jahr'].isin(ausgewählte_jahre)]
 
 # --- 3. DASHBOARD HAUPTBEREICH ---
-st.title("Temperatur & Wind Statistik")
+st.title("Wetter Analyse Dashboard")
 
 if df_filtered.empty:
     st.warning("Keine Daten für die Auswahl vorhanden.")
@@ -141,5 +141,6 @@ else:
                           .background_gradient(subset=['Avg_Wind'], cmap='Blues'),
         use_container_width=True
     )
+
 
 
