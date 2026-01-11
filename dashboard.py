@@ -41,7 +41,7 @@ ausgewählte_jahre = st.sidebar.multiselect("Jahre auswählen:", options=verfüg
 df_filtered = df[df['Jahr'].isin(ausgewählte_jahre)]
 
 # --- 3. HAUPTBEREICH ---
-st.title("Temperature & Wind Statistik")
+st.title("Temperatur & Wind Statistik")
 
 if df_filtered.empty:
     st.warning("Bitte wählen Sie mindestens ein Jahr aus.")
@@ -126,6 +126,7 @@ else:
                           .background_gradient(subset=['Avg_Wind'], cmap='Blues'),
         use_container_width=True
     )
+
 
 
 
