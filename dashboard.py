@@ -71,7 +71,7 @@ else:
     st.divider()
     
     # --- 4. TEMPERATUR: TREND & DISTRIBUTION ---
-    st.subheader("Temperatur")
+    st.subheader("Temperatur Verteilung")
     col_t1, col_t2 = st.columns([2, 1])
     
     with col_t1:
@@ -90,7 +90,7 @@ else:
     st.divider()
 
     # --- 5. WIND: TREND & DISTRIBUTION ---
-    st.subheader("Wind")
+    st.subheader("Wind Verteilung")
     col_w1, col_w2 = st.columns([2, 1])
     
     with col_w1:
@@ -126,6 +126,7 @@ else:
         w_heat = df_filtered.pivot_table(index='Monat', columns='Jahr', values='wind_speed', aggfunc='mean').reindex(m_order)
         h1.plotly_chart(px.imshow(t_heat, text_auto=".1f", color_continuous_scale='RdBu_r', title="Heatmap Temp"), use_container_width=True)
         h2.plotly_chart(px.imshow(w_heat, text_auto=".1f", color_continuous_scale='Blues', title="Heatmap Wind"), use_container_width=True)
+
 
 
 
